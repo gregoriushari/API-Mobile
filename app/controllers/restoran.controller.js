@@ -4,12 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res)=>{
     //validate request
-    if(!req.body.name){
-        res.status(400).send({
-            message:"Content can't be empty"
-        });
-        return;
-    }else if(!req.body.address){
+    if(!req.body.name && !req.body.res_type && !req.body.location &&!req.body.avg-price){
         res.status(400).send({
             message:"Content can't be empty"
         });
