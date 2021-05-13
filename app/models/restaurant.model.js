@@ -11,7 +11,13 @@ module.exports =(sequelize, Sequelize)=>{
         res_type: {
             type: Sequelize.STRING
         },
+        address: {
+            type: Sequelize.STRING
+        },
         location: {
+            type: Sequelize.STRING
+        },
+        phone_number: {
             type: Sequelize.STRING
         },
         avg_price: {

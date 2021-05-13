@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Start of Additional
+# Google API Keys
+keys/
