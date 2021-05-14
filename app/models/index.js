@@ -23,30 +23,37 @@ const db = {}
 db.Sequelize = Sequelize
 db.sequelize = sequelize
 
-db.user = require("../models/user.model")(sequelize, Sequelize)
-db.review = require("../models/reviews.model")(sequelize,Sequelize)
-//1
-db.user.hasMany(db.review, {foreignKey :'userId'})
-db.review.belongsTo(db.user, {foreignKey: 'userId'})
+//user
+db.user = require("../models/users/user.model")(sequelize, Sequelize)
 
-db.photo_review = require("../models/fotoreview.model")(sequelize,Sequelize)
-//2
-db.review.hasMany(db.photo_review,{foreignKey:'reviewId'})
-db.photo_review.belongsTo(db.review,{foreignKey:'reviewId'})
+//reviews
+db.review = require("../models/users/reviews.model")(sequelize,Sequelize)
+db.user.hasMany(db.review, {foreignKey :'userID'})
+db.review.belongsTo(db.user, {foreignKey: 'userID'})
 
-db.restoran = require("../models/restaurant.model")(sequelize, Sequelize)
-//3
-db.restoran.hasMany(db.review, {foreignKey:'restoranId'})
-db.review.belongsTo(db.restoran, {foreignKey:'restoranId'})
+//review photos
+db.review_photos = require("../models/users/review_photos.model")(sequelize,Sequelize)
+db.review.hasMany(db.review_photos,{foreignKey:'reviewID'})
+db.review_photos.belongsTo(db.review,{foreignKey:'reviewID'})
 
-db.photo_restoran = require("../models/fotoresto.model")(sequelize,Sequelize)
-//4
-db.restoran.hasMany(db.photo_restoran,{foreignKey: 'restoranId'})
-db.photo_restoran.belongsTo(db.restoran,{foreignKey: 'restoranId'})
+//restaurant data
+db.restaurant_data = require("../models/restaurant/restaurant_data.model")(sequelize, Sequelize)
+db.restaurant_data.hasMany(db.review, {foreignKey:'restaurantID'})
+db.review.belongsTo(db.restaurant_data, {foreignKey:'restaurantID'})
 
-db.restaurant_type = require("../models/restaurant_type.model")(sequelize, Sequelize)
-//5
-db.restaurant_type.hasMany(db.restoran,{foreignKey:'res_typeID'})
-db.restoran.belongsTo(db.restaurant_type,{foreignKey:'res_typeID'})
+//restaurant photos
+db.restaurant_photos = require("../models/restaurant/restaurant_photos.model")(sequelize,Sequelize)
+db.restaurant_data.hasMany(db.restaurant_photos,{foreignKey: 'restaurantID'})
+db.restaurant_photos.belongsTo(db.restaurant_data,{foreignKey: 'restaurantID'})
+
+//restaurant category
+db.restaurant_category = require("../models/restaurant/restaurant_category.model")(sequelize, Sequelize)
+
+//restaurant type
+db.restaurant_type = require("../models/restaurant/restaurant_type.model")(sequelize, Sequelize)
+db.restaurant_data.hasMany(db.restaurant_type,{foreignKey: 'restaurantID'})
+db.restaurant_category.hasMany(db.restaurant_type, {foreignKey: 'restaurant_categoryID'})
+db.restaurant_type.belongsTo(db.restaurant_data,{foreignKey: 'restaurantID'})
+db.restaurant_type.belongsTo(db.restaurant_category, {foreignKey: 'restaurant_categoryID'})
 
 module.exports = db

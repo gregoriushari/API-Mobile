@@ -20,10 +20,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 
 const db = require("./app/models");
+
+function initRestoType() {
+  const RestaurantCategory = db.restaurant_category;
+  RestaurantCategory.bulkCreate(
+    [
+      { restaurant_categoryID: 1, name: "Noodles"},
+      { restaurant_categoryID: 2, name: "Pizza"},
+      { restaurant_categoryID: 3, name: "Kebab"},
+      { restaurant_categoryID: 4, name: "Meat"},
+      { restaurant_categoryID: 5, name: "Street Food"},
+      { restaurant_categoryID: 6, name: "Vegan"},
+      { restaurant_categoryID: 7, name: "Fast Food"},
+      { restaurant_categoryID: 8, name: "Japanese"},
+    ]
+  )
+}
+
 db.sequelize.sync();
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Db');
-// });
+//db.sequelize.sync({force: true}).then(() => {
+//  console.log('Drop and Resync Db');
+//  initRestoType();
+//});
 
 // simple route
 app.get("/", (req, res) => {
@@ -33,7 +51,6 @@ app.get("/", (req, res) => {
 require('./app/routes/auth.routes')(app)
 //restoran
 require('./app/routes/restoran/restoran.routes')(app)
-require('./app/routes/restoran/restoran_photo.routes')(app)
 
 
 // set port, listen for requests

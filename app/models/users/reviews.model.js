@@ -1,15 +1,15 @@
 module.exports=(sequelize,Sequelize)=>{
     const Review = sequelize.define("review",{
-        reviewId:{
+        reviewID:{
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        restoranId:{
+        restoranID:{
             type:Sequelize.INTEGER,
             primaryKey: true
         },
-        userId:{
+        userID:{
             type:Sequelize.INTEGER,
             primaryKey: true
         },

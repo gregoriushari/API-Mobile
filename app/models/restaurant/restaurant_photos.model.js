@@ -1,11 +1,11 @@
 module.exports=(sequelize, Sequelize)=>{
-    const Resto_Photo = sequelize.define("restoran_foto",{
-        photoId:{
+    const RestaurantPhotos = sequelize.define("restaurant_photos",{
+        photoID:{
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        restoranId:{
+        restaurantID:{
             type: Sequelize.INTEGER,
             primaryKey: true,
         },
@@ -13,5 +13,5 @@ module.exports=(sequelize, Sequelize)=>{
             type: Sequelize.STRING
         }
     })
-    return Resto_Photo
+    return RestaurantPhotos
 }

@@ -1,15 +1,12 @@
 module.exports =(sequelize, Sequelize)=>{
-    const Resto = sequelize.define("restoran",{
-        restoranId:{
+    const RestaurantData = sequelize.define("restaurant_data",{
+        restaurantID:{
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
         name: {
             type: Sequelize.STRING
-        },
-        res_typeID: {
-            type: Sequelize.INTEGER
         },
         address: {
             type: Sequelize.STRING
@@ -24,5 +21,5 @@ module.exports =(sequelize, Sequelize)=>{
             type: Sequelize.INTEGER
         }
     })
-    return Resto
+    return RestaurantData
 }
