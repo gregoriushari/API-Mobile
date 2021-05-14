@@ -44,4 +44,9 @@ db.photo_restoran = require("../models/fotoresto.model")(sequelize,Sequelize)
 db.restoran.hasMany(db.photo_restoran,{foreignKey: 'restoranId'})
 db.photo_restoran.belongsTo(db.restoran,{foreignKey: 'restoranId'})
 
+db.restaurant_type = require("../models/restaurant_type.model")(sequelize, Sequelize)
+//5
+db.restaurant_type.hasMany(db.restoran,{foreignKey:'res_typeID'})
+db.restoran.belongsTo(db.restaurant_type,{foreignKey:'res_typeID'})
+
 module.exports = db

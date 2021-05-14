@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+//upload gambar
+app.use(fileUpload());
+
 const db = require("./app/models");
 db.sequelize.sync();
 // db.sequelize.sync({force: true}).then(() => {
@@ -27,7 +31,9 @@ app.get("/", (req, res) => {
 });
 
 require('./app/routes/auth.routes')(app)
-require('./app/routes/restoran.routes')(app)
+//restoran
+require('./app/routes/restoran/restoran.routes')(app)
+require('./app/routes/restoran/restoran_photo.routes')(app)
 
 
 // set port, listen for requests

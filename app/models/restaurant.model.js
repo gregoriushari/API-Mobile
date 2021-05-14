@@ -8,8 +8,8 @@ module.exports =(sequelize, Sequelize)=>{
         name: {
             type: Sequelize.STRING
         },
-        res_type: {
-            type: Sequelize.STRING
+        res_typeID: {
+            type: Sequelize.INTEGER
         },
         address: {
             type: Sequelize.STRING

@@ -1,4 +1,4 @@
-const restoran = require("../controllers/restoran/restoranData.controller");
+const restoran = require("../../controllers/restoran/restoranData.controller");
 
 
 module.exports= app => {

@@ -106,3 +106,5 @@ dist
 # Start of Additional
 # Google API Keys
 keys/
+# Temp Folder 
+temp_folder/
