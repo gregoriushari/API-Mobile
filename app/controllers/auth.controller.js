@@ -40,12 +40,12 @@ exports.signin = (req, res)=>{
             });
         }
     
-        let token = jwt.sign({ id: user.userId }, config.secret, {
+        let token = jwt.sign({ id: user.userID }, config.secret, {
             expiresIn: 86400 // 24 hours
         });
 
         res.status(200).send({
-            id: user.userId,
+            id: user.userID,
             name : user.name,
             email: user.email,
             accessToken: token

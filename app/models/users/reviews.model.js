@@ -5,7 +5,7 @@ module.exports=(sequelize,Sequelize)=>{
             primaryKey: true,
             autoIncrement: true
         },
-        restoranID:{
+        restaurantID:{
             type:Sequelize.INTEGER,
             primaryKey: true
         },

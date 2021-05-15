@@ -35,6 +35,33 @@ function initRestoType() {
       { restaurant_categoryID: 8, name: "Japanese"},
     ]
   )
+
+  const User = db.user;
+  User.create({
+    name: "Test", email: "test@test.com", password: "$2a$08$qqaItXA5ps.2cuVxRluEKe28MVYksgMA4lqzPxzfANWQokJCapqs2"
+  })
+
+  const RestaurantData = db.restaurant_data;
+  RestaurantData.create({
+    name: "McDonalds", address: "SDC", location: "Google Maps Pinpoint", phone_number: "12345", avg_price: 30000
+  })
+    .then(() => {
+      const RestaurantPhotos = db.restaurant_photos;
+      RestaurantPhotos.bulkCreate(
+        [
+          { restaurantID: 1, link: "link satu"},
+          { restaurantID: 1, link: "link dua"}
+        ]
+      )
+
+      const RestaurantTypes = db.restaurant_type;
+      RestaurantTypes.bulkCreate(
+        [
+          { restaurantID: 1, restaurant_categoryID: 4},
+          { restaurantID: 1, restaurant_categoryID: 7}
+        ]
+      )
+    })
 }
 
 db.sequelize.sync();
@@ -48,9 +75,13 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to MOBILE RESTAURANT API, MADE WITH LOVE." });
 });
 
-require('./app/routes/auth.routes')(app)
+require('./app/routes/user/auth.routes')(app)
 //restoran
 require('./app/routes/restoran/restoran.routes')(app)
+//review
+require('./app/routes/user/review.routes')(app)
+//user
+require('./app/routes/user/user.routes')(app)
 
 
 // set port, listen for requests

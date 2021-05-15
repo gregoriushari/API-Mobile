@@ -18,10 +18,14 @@ verifyToken = (req, res, next) => {
             message: "Unauthorized!"
             });
         }
-        req.userId = decoded.id;
+        req.userID = decoded.id;
         next();
     });
 };
+
+isAdmin = (req, res, next) => {
+
+}
 
 const authJwt = {
     verifyToken : verifyToken
