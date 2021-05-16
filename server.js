@@ -49,8 +49,8 @@ function initRestoType() {
       const RestaurantPhotos = db.restaurant_photos;
       RestaurantPhotos.bulkCreate(
         [
-          { restaurantID: 1, link: "link satu"},
-          { restaurantID: 1, link: "link dua"}
+          { restaurantID: 1, link: "https://akcdn.detik.net.id/visual/2020/03/11/a74f8ad0-5ae6-43c0-932a-ef23c7e717c5_169.jpeg"},
+          { restaurantID: 1, link: "https://assets.pikiran-rakyat.com/crop/0x0:0x0/x/photo/2020/09/05/2316288780.jpeg"}
         ]
       )
 

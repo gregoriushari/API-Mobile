@@ -43,14 +43,14 @@ function addReviewToDB(res, data){
 }
 
 exports.addReview = async(req,res) => {
-  const { restaurantID, userID, review, score } = req.body;
+  const { restaurantID, review, score } = req.body;
 
   let isPhoto = 0;
   let public_link = null;
 
   const newData = {
     restaurantID: restaurantID,
-    userID: userID,
+    userID: req.userID,
     review: review,
     score: score,
     media_link: public_link

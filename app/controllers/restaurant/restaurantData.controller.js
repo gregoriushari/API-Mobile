@@ -5,7 +5,7 @@ const RestaurantPhotos = db.restaurant_photos;
 const Op = db.Sequelize.Op;
 
 exports.addRestaurantData = (req, res)=>{
-    const { name, address, location, phone_number, avg_price } = req.body;
+    const { name, res_type, address, location, phone_number, avg_price } = req.body;
     //validate request
     if(!name || !res_type || !location || !avg_price){
         res.status(400).send({
@@ -17,6 +17,7 @@ exports.addRestaurantData = (req, res)=>{
     //create a restoran
     const restoran = {
         name : name,
+        res_type: res_type,
         address: address,
         location : location,
         phone_number: phone_number,
@@ -73,8 +74,20 @@ exports.addRestaurantCategory = (req,res) => {
 
 exports.findAllRestaurant = (req,res)=>{
     RestaurantData.findAll({include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
-    .then(data =>{
-        res.send(data);
+    .then((data) =>{
+        const stringed = JSON.stringify(data);
+        const jsonData = JSON.parse(stringed);
+        console.log(jsonData);
+        for (let singleData of jsonData) {
+            let new_photos_arr = [];
+            let new_category_arr = [];
+            for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
+            for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
+            singleData.restaurant_photos = new_photos_arr;
+            singleData.restaurant_types = new_category_arr;
+        } 
+        
+        return res.status(200).send(jsonData);
     })
     .catch(err => {
         res.status(500).send({
@@ -90,7 +103,19 @@ exports.findRestaurantByName = (req,res)=>{
 
     RestaurantData.findAll({where : condition, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
     .then(data =>{
-        res.send(data);
+        const stringed = JSON.stringify(data);
+        const jsonData = JSON.parse(stringed);
+        console.log(jsonData);
+        for (let singleData of jsonData) {
+            let new_photos_arr = [];
+            let new_category_arr = [];
+            for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
+            for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
+            singleData.restaurant_photos = new_photos_arr;
+            singleData.restaurant_types = new_category_arr;
+        } 
+        
+        return res.status(200).send(jsonData);
     })
     .catch(err => {
         res.status(500).send({
@@ -112,7 +137,19 @@ exports.findRestaurantByCategory = async(req,res)=>{
 
     RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
     .then(data =>{
-        res.send(data);
+        const stringed = JSON.stringify(data);
+        const jsonData = JSON.parse(stringed);
+        console.log(jsonData);
+        for (let singleData of jsonData) {
+            let new_photos_arr = [];
+            let new_category_arr = [];
+            for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
+            for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
+            singleData.restaurant_photos = new_photos_arr;
+            singleData.restaurant_types = new_category_arr;
+        } 
+        
+        return res.status(200).send(jsonData);
     })
     .catch(err => {
         res.status(500).send({
