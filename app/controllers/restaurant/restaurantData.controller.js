@@ -72,7 +72,7 @@ exports.addRestaurantCategory = (req,res) => {
 }
 
 exports.findAllRestaurant = (req,res)=>{
-    RestaurantData.findAll({where : condition, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
+    RestaurantData.findAll({include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
     .then(data =>{
         res.send(data);
     })
