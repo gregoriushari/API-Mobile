@@ -69,3 +69,37 @@ exports.addProfilePicture = (req,res) => {
       });
   });
 }
+
+exports.getUserInfo = (req,res) => {
+  User.findAll({
+    where: { userID: req.userID },
+    attributes: ['name', 'email', 'profile_picture']
+  })
+  .then((data) => {
+    res.status(200).send(data);
+  })
+  .catch(err => {
+    res.status(500).send({ message: "Terjadi kesalahan saat mendapatkan data pengguna." });
+  });
+}
+
+exports.updateUserInfo = (req,res) => {
+  const { name, email } = req.body;
+  User.update(
+    {
+      name: name,
+      email: email
+    },
+    {
+      where: {
+        userID: req.userID
+      }
+    }
+  )
+  .then(() => {
+    res.status(200).send({ message: "Berhasil update! "});
+  })
+  .catch(err => {
+    res.status(500).send({ message: "Terjadi kesalahan saat mengupdate data pengguna." });
+  });
+}

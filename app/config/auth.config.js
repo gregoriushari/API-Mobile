@@ -1,3 +1,3 @@
 module.exports={
-    secret:"zapple-mobile-app"
+    secret:process.env.JWT_SECRET
 }
