@@ -159,3 +159,21 @@ exports.findRestaurantByCategory = async(req,res)=>{
         })
     });
 };
+
+exports.findRestaurantByID = (req,res)=>{
+    const restaurantID = req.params.restaurantID;
+
+    RestaurantData.findAll({where : { restaurantID: restaurantID }, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
+    .then(async(data) =>{
+        const stringed = JSON.stringify(data);
+        const jsonData = JSON.parse(stringed);
+        const new_formatted = await formatJSON(jsonData)
+        
+        return res.status(200).send(new_formatted);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "An error occured while finding restaurant by ID"
+        })
+    });
+};
