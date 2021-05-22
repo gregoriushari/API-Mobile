@@ -7,17 +7,14 @@ const Review = db.review
 const Op = db.Sequelize.Op;
 
 async function getAverage(restaurantID) {
-    Review.findAll({
+    data = await Review.findAll({
         where: { restaurantID: restaurantID },
         attributes: [[Sequelize.fn('avg', Sequelize.col('score')),'rating']]
     })
-    .then((data) => {
-        const rating_stringified = JSON.stringify(data)
-        const rating_parsed = JSON.parse(rating_stringified)
-        let rating = parseFloat(rating_parsed[0].rating)
-        console.log(rating)
-        return parseFloat(rating_parsed[0].rating)
-    })
+    const rating_stringified = JSON.stringify(data)
+    const rating_parsed = JSON.parse(rating_stringified)
+    let rating = parseFloat(rating_parsed[0].rating)
+    return parseFloat(rating_parsed[0].rating)
 }
 
 async function formatJSON(data) {
@@ -28,10 +25,8 @@ async function formatJSON(data) {
         for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
         singleData.restaurant_photos = new_photos_arr;
         singleData.restaurant_types = new_category_arr;
-
-        //singleData.rating = await getAverage(singleData.restaurantID)
-    } 
-    console.log(data)
+        singleData.rating = await getAverage(singleData.restaurantID)
+    }
     return data
 }
 

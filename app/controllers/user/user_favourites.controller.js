@@ -3,8 +3,21 @@ const UserFavourites = db.user_favourites
 const RestaurantData = db.restaurant_data
 const RestaurantType = db.restaurant_type;
 const RestaurantPhotos = db.restaurant_photos;
+const Review = db.review;
+const Sequelize = db.Sequelize
 
-function formatJSON(data) {
+async function getAverage(restaurantID) {
+  data = await Review.findAll({
+      where: { restaurantID: restaurantID },
+      attributes: [[Sequelize.fn('avg', Sequelize.col('score')),'rating']]
+  })
+  const rating_stringified = JSON.stringify(data)
+  const rating_parsed = JSON.parse(rating_stringified)
+  let rating = parseFloat(rating_parsed[0].rating)
+  return parseFloat(rating_parsed[0].rating)
+}
+
+async function formatJSON(data) {
   for (let singleData of data) {
       let new_photos_arr = [];
       let new_category_arr = [];
@@ -12,7 +25,8 @@ function formatJSON(data) {
       for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
       singleData.restaurant_photos = new_photos_arr;
       singleData.restaurant_types = new_category_arr;
-  } 
+      singleData.rating = await getAverage(singleData.restaurantID)
+  }
   return data
 }
 
@@ -60,12 +74,12 @@ exports.getFavouriteRestaurant = (req,res) => {
     for (let temp of data) RestaurantIDs.push(temp.restaurantID);
     console.log('ini')
     RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
-    .then(dataRes =>{
+    .then(async(dataRes) =>{
         console.log('itu')
         const stringed = JSON.stringify(dataRes);
         const jsonData = JSON.parse(stringed);
         console.log(jsonData);
-        const new_formatted = formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData)
         
         return res.status(200).send(new_formatted);
     })
