@@ -5,4 +5,5 @@ module.exports= app => {
     app.post("/api/user/favourites/add", [authJwt.verifyToken], FavouriteController.addFavorites)
     app.post("/api/user/favourites/delete", [authJwt.verifyToken], FavouriteController.removeFavorites)
     app.get("/api/user/favourites", [authJwt.verifyToken], FavouriteController.getFavouriteRestaurant)
+    app.get("/api/user/favourites/status/:restaurantID", [authJwt.verifyToken], FavouriteController.getIsUserFav)
 }

@@ -26,14 +26,14 @@ function initRestoType() {
   const RestaurantCategory = db.restaurant_category;
   RestaurantCategory.bulkCreate(
     [
-      { restaurant_categoryID: 1, name: "Noodles"},
-      { restaurant_categoryID: 2, name: "Pizza"},
-      { restaurant_categoryID: 3, name: "Kebab"},
-      { restaurant_categoryID: 4, name: "Meat"},
-      { restaurant_categoryID: 5, name: "Street Food"},
-      { restaurant_categoryID: 6, name: "Vegan"},
-      { restaurant_categoryID: 7, name: "Fast Food"},
-      { restaurant_categoryID: 8, name: "Japanese"},
+      { restaurant_categoryID: 1, name: "Cafe"},
+      { restaurant_categoryID: 2, name: "Fast Food"},
+      { restaurant_categoryID: 3, name: "Japanese"},
+      { restaurant_categoryID: 4, name: "Barbeque"},
+      { restaurant_categoryID: 5, name: "Noodles"},
+      { restaurant_categoryID: 6, name: "Pizza"},
+      { restaurant_categoryID: 7, name: "Street Food"},
+      { restaurant_categoryID: 8, name: "Seafood"},
     ]
   )
 
@@ -58,8 +58,7 @@ function initRestoType() {
       const RestaurantTypes = db.restaurant_type;
       RestaurantTypes.bulkCreate(
         [
-          { restaurantID: 1, restaurant_categoryID: 4},
-          { restaurantID: 1, restaurant_categoryID: 7}
+          { restaurantID: 1, restaurant_categoryID: 2}
         ]
       )
     })

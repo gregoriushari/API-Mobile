@@ -93,3 +93,19 @@ exports.getFavouriteRestaurant = (req,res) => {
     res.status(500).send({ message: "An error occured while fetching favourite restaurant."})
   })
 }
+
+exports.getIsUserFav = (req,res) => {
+  UserFavourites.count({
+    where: {
+      userID: req.userID,
+      restaurantID: req.params.restaurantID
+    }
+  })
+  .then(count_res => {
+    if (count_res > 0) return res.status(200).send({ isFavourite: true })
+    else return res.status(200).send({ isFavourite: false })
+  })
+  .catch(err => {
+    res.status(500).send({ message: "An error occured while fetching status of favourite restaurant."})
+  })
+}
