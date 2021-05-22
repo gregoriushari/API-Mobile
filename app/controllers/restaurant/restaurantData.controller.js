@@ -4,10 +4,23 @@ const RestaurantData = db.restaurant_data;
 const RestaurantType = db.restaurant_type;
 const RestaurantPhotos = db.restaurant_photos;
 const Review = db.review
+const UserFavourites = db.user_favourites
 const Op = db.Sequelize.Op;
 
+async function getIsFavourite(restaurantID, userID) {
+    const isFavResult = await UserFavourites.count({
+        where: {
+            userID: userID,
+            restaurantID: restaurantID
+        }
+    })
+    
+    if (isFavResult > 0) return true;
+    else return false;
+}
+
 async function getAverage(restaurantID) {
-    data = await Review.findAll({
+    const data = await Review.findAll({
         where: { restaurantID: restaurantID },
         attributes: [[Sequelize.fn('avg', Sequelize.col('score')),'rating']]
     })
@@ -17,7 +30,7 @@ async function getAverage(restaurantID) {
     return parseFloat(rating_parsed[0].rating)
 }
 
-async function formatJSON(data) {
+async function formatJSON(data, userID) {
     for (let singleData of data) {
         let new_photos_arr = [];
         let new_category_arr = [];
@@ -26,6 +39,7 @@ async function formatJSON(data) {
         singleData.restaurant_photos = new_photos_arr;
         singleData.restaurant_types = new_category_arr;
         singleData.rating = await getAverage(singleData.restaurantID)
+        singleData.isFavourite = await getIsFavourite(singleData.restaurantID, userID)
     }
     return data
 }
@@ -105,7 +119,7 @@ exports.findAllRestaurant = (req,res)=>{
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        const new_formatted = await formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData, req.userID)
         
         return res.status(200).send(new_formatted);
     })
@@ -124,7 +138,7 @@ exports.findRestaurantByName = (req,res)=>{
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        const new_formatted = await formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData, req.userID)
         
         return res.status(200).send(new_formatted);
     })
@@ -149,7 +163,7 @@ exports.findRestaurantByCategory = async(req,res)=>{
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        const new_formatted = await formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData, req.userID)
         console.log('lewat sini')
         return res.status(200).send(new_formatted);
     })
@@ -167,7 +181,7 @@ exports.findRestaurantByID = (req,res)=>{
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        const new_formatted = await formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData, req.userID)
         
         return res.status(200).send(new_formatted);
     })
