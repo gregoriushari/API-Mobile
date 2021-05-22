@@ -100,10 +100,10 @@ exports.addRestaurantCategory = (req,res) => {
 
 exports.findAllRestaurant = (req,res)=>{
     RestaurantData.findAll({include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
-    .then((data) =>{
+    .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        const new_formatted = formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData)
         
         return res.status(200).send(new_formatted);
     })
@@ -119,10 +119,10 @@ exports.findRestaurantByName = (req,res)=>{
     let condition = name ? {name : {[Op.like]: `%${name}%`}} : null;
 
     RestaurantData.findAll({where : condition, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
-    .then(data =>{
+    .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        const new_formatted = formatJSON(jsonData)
+        const new_formatted = await formatJSON(jsonData)
         
         return res.status(200).send(new_formatted);
     })
