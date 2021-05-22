@@ -11,7 +11,10 @@ module.exports =(sequelize, Sequelize)=>{
         address: {
             type: Sequelize.STRING
         },
-        location: {
+        latitude: {
+            type: Sequelize.STRING
+        },
+        longitude: {
             type: Sequelize.STRING
         },
         phone_number: {

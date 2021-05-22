@@ -44,7 +44,7 @@ function initRestoType() {
 
   const RestaurantData = db.restaurant_data;
   RestaurantData.create({
-    name: "McDonalds", address: "SDC", location: "Google Maps Pinpoint", phone_number: "12345", avg_price: 30000
+    name: "McDonalds", address: "SDC", latitude: "-6.25752", longitude: "106.61660", phone_number: "12345", avg_price: 30000
   })
     .then(() => {
       const RestaurantPhotos = db.restaurant_photos;

@@ -31,9 +31,9 @@ async function formatJSON(data) {
 }
 
 exports.addRestaurantData = (req, res)=>{
-    const { name, res_type, address, location, phone_number, avg_price } = req.body;
+    const { name, res_type, address, latitude, longitude, phone_number, avg_price } = req.body;
     //validate request
-    if(!name || !res_type || !location || !avg_price){
+    if(!name || !res_type || !address || !latitude || !longitude || !phone_number || !avg_price){
         res.status(400).send({
             message:"Content can't be empty"
         });
@@ -45,7 +45,8 @@ exports.addRestaurantData = (req, res)=>{
         name : name,
         res_type: res_type,
         address: address,
-        location : location,
+        latitude: latitude,
+        longitude: longitude,
         phone_number: phone_number,
         avg_price: avg_price 
     };
@@ -63,13 +64,14 @@ exports.addRestaurantData = (req, res)=>{
 };
 
 exports.updateRestaurantData = (req,res) => {
-    const { restaurantID, name, res_type, address, location, phone_number, avg_price } = req.body;
+    const { restaurantID, name, res_type, address, latitude, longitude, phone_number, avg_price } = req.body;
     
     const restoran = {
         name : name,
         res_type: res_type,
         address: address,
-        location : location,
+        latitude: latitude,
+        longitude: longitude,
         phone_number: phone_number,
         avg_price: avg_price 
     };
