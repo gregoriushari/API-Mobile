@@ -37,10 +37,10 @@ exports.addRestaurantPhoto = (req,res) => {
 
     RestaurantPhotos.create({ new_entry })
     .then(() => {
-      res.status(200).send({ message: "Berhasil terinput!"});
+      res.status(200).send({ message: "Input successful!"});
     })
     .catch(err => {
-      res.status(500).send({ message: "Terjadi kesalahan saat menambahkan gambar restoran." })
+      res.status(500).send({ message: "An error occured while uploading restaurant photos." })
     })
   });
 }

@@ -35,10 +35,10 @@ function formatFileName(date) {
 function addReviewToDB(res, data){
   Review.create(data)
     .then(() => {
-      res.status(200).send({ message: "Review berhasil diinput!"});
+      res.status(200).send({ message: "Input successful!"});
     })
     .catch(err => {
-      res.status(500).send({ message: "Terjadi kesalahan saat menginput data ke database."});
+      res.status(500).send({ message: "An error occured while creating review."});
     })
 }
 
@@ -76,7 +76,7 @@ exports.addReview = async(req,res) => {
         public_link = cloudStorageBaseURL + bucketname + '/' + newFileName;
       }
       catch(err) {
-        return res.status(500).send({ message: "Terjadi kesalahan saat mengupload gambar." });
+        return res.status(500).send({ message: "An error occured while uploading picture." });
       }
 
       fs.unlink(uploadPath, (err) => {
@@ -101,5 +101,8 @@ exports.getReview = (req,res) => {
   })
   .then((data) => {
     res.status(200).send(data);
+  })
+  .catch(err => {
+    res.status(500).send({ message: "An error occured while fetching review."});
   })
 }

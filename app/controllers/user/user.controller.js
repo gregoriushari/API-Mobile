@@ -53,7 +53,7 @@ exports.addProfilePicture = (req,res) => {
       public_link = cloudStorageBaseURL + bucketname + '/' + newFileName;
     }
     catch(err) {
-      return res.status(500).send({ message: "Terjadi kesalahan saat mengupload gambar." });
+      return res.status(500).send({ message: "An error occured while uploading profile picture." });
     }
 
     fs.unlink(uploadPath, (err) => {
@@ -62,10 +62,10 @@ exports.addProfilePicture = (req,res) => {
 
     User.update({ profile_picture: public_link }, {where: { userID: userID}})
       .then(() => {
-        res.status(200).send({ message: "Profile picture berhasil diupdate!"})
+        res.status(200).send({ message: "Profile picture update successful!"})
       })
       .catch(err => {
-        res.status(500).send({ message: "Terjadi kesalahan saat memasukkan gambar ke sistem database" });
+        res.status(500).send({ message: "An error occured while updating profile picture." });
       });
   });
 }
@@ -79,7 +79,7 @@ exports.getUserInfo = (req,res) => {
     res.status(200).send(data);
   })
   .catch(err => {
-    res.status(500).send({ message: "Terjadi kesalahan saat mendapatkan data pengguna." });
+    res.status(500).send({ message: "An error occured while fetching user data." });
   });
 }
 
@@ -97,9 +97,9 @@ exports.updateUserInfo = (req,res) => {
     }
   )
   .then(() => {
-    res.status(200).send({ message: "Berhasil update! "});
+    res.status(200).send({ message: "Update Successful! "});
   })
   .catch(err => {
-    res.status(500).send({ message: "Terjadi kesalahan saat mengupdate data pengguna." });
+    res.status(500).send({ message: "An error occured while updating user data." });
   });
 }

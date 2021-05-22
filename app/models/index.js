@@ -56,4 +56,11 @@ db.restaurant_category.hasMany(db.restaurant_type, {foreignKey: 'restaurant_cate
 db.restaurant_type.belongsTo(db.restaurant_data,{foreignKey: 'restaurantID'})
 db.restaurant_type.belongsTo(db.restaurant_category, {foreignKey: 'restaurant_categoryID'})
 
+//user favourites
+db.user_favourites = require("../models/users/user_favourites.model")(sequelize, Sequelize)
+db.user.hasMany(db.user_favourites, {foreignKey:'userID'})
+db.restaurant_data.hasMany(db.user_favourites,{foreignKey: 'restaurantID'})
+db.user_favourites.belongsTo(db.user, {foreignKey:'userID'})
+db.user_favourites.belongsTo(db.restaurant_data, {foreignKey:'userID'})
+
 module.exports = db

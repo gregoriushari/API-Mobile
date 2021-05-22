@@ -83,7 +83,8 @@ require('./app/routes/restoran/restoran.routes')(app)
 require('./app/routes/user/review.routes')(app)
 //user
 require('./app/routes/user/user.routes')(app)
-
+//favourites
+require('./app/routes/user/favourites.routes')(app)
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

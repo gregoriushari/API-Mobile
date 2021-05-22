@@ -1,8 +1,39 @@
 const db = require("../../models");
+const Sequelize = db.Sequelize
 const RestaurantData = db.restaurant_data;
 const RestaurantType = db.restaurant_type;
 const RestaurantPhotos = db.restaurant_photos;
+const Review = db.review
 const Op = db.Sequelize.Op;
+
+async function getAverage(restaurantID) {
+    Review.findAll({
+        where: { restaurantID: restaurantID },
+        attributes: [[Sequelize.fn('avg', Sequelize.col('score')),'rating']]
+    })
+    .then((data) => {
+        const rating_stringified = JSON.stringify(data)
+        const rating_parsed = JSON.parse(rating_stringified)
+        let rating = parseFloat(rating_parsed[0].rating)
+        console.log(rating)
+        return parseFloat(rating_parsed[0].rating)
+    })
+}
+
+async function formatJSON(data) {
+    for (let singleData of data) {
+        let new_photos_arr = [];
+        let new_category_arr = [];
+        for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
+        for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
+        singleData.restaurant_photos = new_photos_arr;
+        singleData.restaurant_types = new_category_arr;
+
+        //singleData.rating = await getAverage(singleData.restaurantID)
+    } 
+    console.log(data)
+    return data
+}
 
 exports.addRestaurantData = (req, res)=>{
     const { name, res_type, address, location, phone_number, avg_price } = req.body;
@@ -50,10 +81,10 @@ exports.updateRestaurantData = (req,res) => {
 
     RestaurantData.update(restoran, { where: { restaurantID: restaurantID } })
         .then(data => {
-            res.status(200).send({ message: "Berhasil Update!" });
+            res.status(200).send({ message: "Update Successful!" });
         })
         .catch(err => {
-            res.status(500).send({ message: "Terjadi kesalahan saat mengupdate data restoran." })
+            res.status(500).send({ message: "An error occured while updating restaurant data." })
         })
 }
 
@@ -65,10 +96,10 @@ exports.addRestaurantCategory = (req,res) => {
         categoryID: categoryID
     })
     .then(data => {
-        res.status(200).send({ message: "Berhasil Input!" });
+        res.status(200).send({ message: "Input Successful!" });
     })
     .catch(err => {
-        res.status(500).send({ message: "Terjadi kesalahan saat memasukkan data kategori restoran." })
+        res.status(500).send({ message: "An error occured while entering restaurant category." })
     })
 }
 
@@ -77,22 +108,13 @@ exports.findAllRestaurant = (req,res)=>{
     .then((data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        console.log(jsonData);
-        for (let singleData of jsonData) {
-            let new_photos_arr = [];
-            let new_category_arr = [];
-            for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
-            for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
-            singleData.restaurant_photos = new_photos_arr;
-            singleData.restaurant_types = new_category_arr;
-        } 
+        const new_formatted = formatJSON(jsonData)
         
-        return res.status(200).send(jsonData);
+        return res.status(200).send(new_formatted);
     })
     .catch(err => {
         res.status(500).send({
-            message:
-            err.message || "tidak ada"
+            message: "An error occured while finding restaurant"
         })
     });
 };
@@ -105,22 +127,13 @@ exports.findRestaurantByName = (req,res)=>{
     .then(data =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        console.log(jsonData);
-        for (let singleData of jsonData) {
-            let new_photos_arr = [];
-            let new_category_arr = [];
-            for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
-            for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
-            singleData.restaurant_photos = new_photos_arr;
-            singleData.restaurant_types = new_category_arr;
-        } 
+        const new_formatted = formatJSON(jsonData)
         
-        return res.status(200).send(jsonData);
+        return res.status(200).send(new_formatted);
     })
     .catch(err => {
         res.status(500).send({
-            message:
-            err.message || "tidak ada"
+            message: "An error occured while finding restaurant by name"
         })
     });
 };
@@ -136,25 +149,16 @@ exports.findRestaurantByCategory = async(req,res)=>{
     for (let temp of QueryOne) RestaurantIDs.push(temp.restaurantID);
 
     RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
-    .then(data =>{
+    .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
-        console.log(jsonData);
-        for (let singleData of jsonData) {
-            let new_photos_arr = [];
-            let new_category_arr = [];
-            for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
-            for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
-            singleData.restaurant_photos = new_photos_arr;
-            singleData.restaurant_types = new_category_arr;
-        } 
-        
-        return res.status(200).send(jsonData);
+        const new_formatted = await formatJSON(jsonData)
+        console.log('lewat sini')
+        return res.status(200).send(new_formatted);
     })
     .catch(err => {
         res.status(500).send({
-            message:
-            err.message || "tidak ada"
+            message: "An error occured while finding restaurant by category"
         })
     });
 };
