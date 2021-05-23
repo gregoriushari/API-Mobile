@@ -1,6 +1,7 @@
 //libraries
 const path = require('path');
 const fs = require("fs");
+const bcrypt = require("bcryptjs");
 
 //db
 const db = require("../../models")
@@ -101,5 +102,24 @@ exports.updateUserInfo = (req,res) => {
   })
   .catch(err => {
     res.status(500).send({ message: "An error occured while updating user data." });
+  });
+}
+
+exports.updatePassword = (req,res) => {
+  const { password } = req.body;
+
+  User.update(
+    {
+      password: bcrypt.hashSync(password, 8)
+    },
+    {
+      where: { userID: req.userID }
+    }
+  )
+  .then(() => {
+    res.status(200).send({ message: "Password Update Successful! "});
+  })
+  .catch(err => {
+    res.status(500).send({ message: "An error occured while updating password." });
   });
 }
