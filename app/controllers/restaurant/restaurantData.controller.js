@@ -166,7 +166,7 @@ exports.findRestaurantByCategory = async(req,res)=>{
     
     for (let temp of QueryOne) RestaurantIDs.push(temp.restaurantID);
 
-    RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, includeModels })
+    RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, include: includeModels })
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
