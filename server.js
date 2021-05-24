@@ -72,7 +72,7 @@ db.sequelize.sync();
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to MOBILE RESTAURANT API, MADE WITH LOVE." });
+  res.json({ message: "Welcome to MOBILE RESTAURANT API, MADE WITH LOVE. hari ini" });
 });
 
 require('./app/routes/user/auth.routes')(app)
