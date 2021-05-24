@@ -5,6 +5,7 @@ const fs = require("fs");
 //db
 const db = require("../../models");
 const Review = db.review;
+const User = db.user;
 
 //GCP Cloud Storage
 const { Storage } = require('@google-cloud/storage');
@@ -30,6 +31,21 @@ function formatFileName(date) {
   if (secs < 10) secs = '0' + secs;
   
   return day + month + year + "_" + hours + mins + secs;
+}
+
+async function formatJSON(data) {
+  for (let singleData of data) {
+    console.log(singleData)
+    const name_res = await User.findAll({
+        where: { userID: singleData.userID },
+        attributes: ['name']
+    })
+    const name_parsed = name_res[0].name;
+    console.log(name_parsed)
+    singleData.name = name_parsed;
+  }
+  console.log(data)
+  return data
 }
 
 function addReviewToDB(res, data){
@@ -99,8 +115,11 @@ exports.getReview = (req,res) => {
     where: { restaurantID: restaurantID },
     attributes: ['reviewID', 'restaurantID', 'userID', 'review', 'score', 'media_link']
   })
-  .then((data) => {
-    res.status(200).send(data);
+  .then(async(data) => {
+    const data_string = JSON.stringify(data)
+    const data_JSON = JSON.parse(data_string)
+    const new_formatted = await formatJSON(data_JSON)
+    res.status(200).send(new_formatted)
   })
   .catch(err => {
     res.status(500).send({ message: "An error occured while fetching review."});
