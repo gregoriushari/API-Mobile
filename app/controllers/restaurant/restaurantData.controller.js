@@ -5,7 +5,11 @@ const RestaurantType = db.restaurant_type;
 const RestaurantPhotos = db.restaurant_photos;
 const Review = db.review
 const UserFavourites = db.user_favourites
+const RestaurantMenu = db.restaurant_menu
+
 const Op = db.Sequelize.Op;
+
+const includeModels = [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}, { model: RestaurantMenu, attributes: ['link']}]
 
 async function getIsFavourite(restaurantID, userID) {
     const isFavResult = await UserFavourites.count({
@@ -34,10 +38,13 @@ async function formatJSON(data, userID) {
     for (let singleData of data) {
         let new_photos_arr = [];
         let new_category_arr = [];
+        let new_menus_arr = [];
         for (let tmpPhotos of singleData.restaurant_photos) new_photos_arr.push(tmpPhotos.link);
         for (let tmpCats of singleData.restaurant_types) new_category_arr.push(tmpCats.restaurant_categoryID);
+        for (let tmpMenus of singleData.restaurant_menus) new_menus_arr.push(tmpMenus.link);
         singleData.restaurant_photos = new_photos_arr;
         singleData.restaurant_types = new_category_arr;
+        singleData.restaurant_menus = new_menus_arr;
         singleData.rating = await getAverage(singleData.restaurantID)
         singleData.isFavourite = await getIsFavourite(singleData.restaurantID, userID)
     }
@@ -115,7 +122,7 @@ exports.addRestaurantCategory = (req,res) => {
 }
 
 exports.findAllRestaurant = (req,res)=>{
-    RestaurantData.findAll({include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
+    RestaurantData.findAll({include: includeModels })
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
@@ -134,7 +141,7 @@ exports.findRestaurantByName = (req,res)=>{
     const name = req.params.name_param;
     let condition = name ? {name : {[Op.like]: `%${name}%`}} : null;
 
-    RestaurantData.findAll({where : condition, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
+    RestaurantData.findAll({where : condition, include: includeModels })
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
@@ -159,7 +166,7 @@ exports.findRestaurantByCategory = async(req,res)=>{
     
     for (let temp of QueryOne) RestaurantIDs.push(temp.restaurantID);
 
-    RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
+    RestaurantData.findAll({where : { restaurantID: RestaurantIDs }, includeModels })
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
@@ -177,7 +184,7 @@ exports.findRestaurantByCategory = async(req,res)=>{
 exports.findRestaurantByID = (req,res)=>{
     const restaurantID = req.params.restaurantID;
 
-    RestaurantData.findAll({where : { restaurantID: restaurantID }, include: [{ model: RestaurantPhotos, attributes: ['link'] }, { model: RestaurantType, attributes: ['restaurant_categoryID']}] })
+    RestaurantData.findAll({where : { restaurantID: restaurantID }, include: includeModels })
     .then(async(data) =>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);

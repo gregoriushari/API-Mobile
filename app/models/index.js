@@ -63,4 +63,9 @@ db.restaurant_data.hasMany(db.user_favourites,{foreignKey: 'restaurantID'})
 db.user_favourites.belongsTo(db.user, {foreignKey:'userID'})
 db.user_favourites.belongsTo(db.restaurant_data, {foreignKey:'userID'})
 
+//restaurant menu
+db.restaurant_menu = require("../models/restaurant/restaurant_menus.model")(sequelize, Sequelize)
+db.restaurant_data.hasMany(db.restaurant_menu, {foreignKey: 'restaurantID'})
+db.restaurant_menu.belongsTo(db.restaurant_data, {foreignKey: 'restaurantID'})
+
 module.exports = db
