@@ -7,7 +7,8 @@ module.exports= app => {
     app.get("/api/restaurant/", [authJwt.verifyToken], RestaurantDataController.findAllRestaurant);
     app.get("/api/restaurant/name/:name_param", [authJwt.verifyToken], RestaurantDataController.findRestaurantByName);
     app.get("/api/restaurant/category/:category_id", [authJwt.verifyToken], RestaurantDataController.findRestaurantByCategory);
-    app.get("/api/restaurant/id/:restaurantID", [authJwt.verifyToken], RestaurantDataController.findRestaurantByID)
+    app.get("/api/restaurant/id/:restaurantID", [authJwt.verifyToken], RestaurantDataController.findRestaurantByID);
+    app.get("/api/restaurant/:category_id/:name", [authJwt.verifyToken], RestaurantDataController.findRestaurantByCategoryAndName);
     //photo
     app.post("/api/restaurant/photo", [authJwt.verifyToken], RestaurantPhotosController.addRestaurantPhoto);
 }

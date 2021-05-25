@@ -139,7 +139,7 @@ exports.findAllRestaurant = (req,res)=>{
 
 exports.findRestaurantByName = (req,res)=>{
     const name = req.params.name_param;
-    let condition = name ? {name : {[Op.like]: `%${name}%`}} : null;
+    const condition = name ? {name : {[Op.like]: `%${name}%`}} : null;
 
     RestaurantData.findAll({where : condition, include: includeModels })
     .then(async(data) =>{
@@ -171,7 +171,6 @@ exports.findRestaurantByCategory = async(req,res)=>{
         const stringed = JSON.stringify(data);
         const jsonData = JSON.parse(stringed);
         const new_formatted = await formatJSON(jsonData, req.userID)
-        console.log('lewat sini')
         return res.status(200).send(new_formatted);
     })
     .catch(err => {
@@ -198,3 +197,32 @@ exports.findRestaurantByID = (req,res)=>{
         })
     });
 };
+
+exports.findRestaurantByCategoryAndName = async(req,res) => {
+    const name = req.params.name;
+    const category_id = req.params.category_id;
+    console.log('Name:' + name)
+    console.log('CategoryID' + category_id)
+
+    const QueryOne = 
+        await RestaurantType.findAll({ where: { restaurant_categoryID: category_id }})
+    
+    let RestaurantIDs = [];
+    
+    for (let temp of QueryOne) RestaurantIDs.push(temp.restaurantID);
+
+    const condition = name ? {name : {[Op.like]: `%${name}%`}} : null;
+
+    RestaurantData.findAll({where : [{ restaurantID: RestaurantIDs }, condition], include: includeModels })
+    .then(async(data) =>{
+        const stringed = JSON.stringify(data);
+        const jsonData = JSON.parse(stringed);
+        const new_formatted = await formatJSON(jsonData, req.userID)
+        return res.status(200).send(new_formatted);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "An error occured while finding restaurant by category and name"
+        })
+    });
+}

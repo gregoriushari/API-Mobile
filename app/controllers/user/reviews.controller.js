@@ -125,3 +125,21 @@ exports.getReview = (req,res) => {
     res.status(500).send({ message: "An error occured while fetching review."});
   })
 }
+
+exports.getReviewByUser = (req,res) => {
+  const userID = req.userID;
+
+  Review.findAll({
+    where: { userID: userID },
+    attributes: ['reviewID', 'restaurantID', 'userID', 'review', 'score', 'media_link']
+  })
+  .then(async(data) => {
+    const data_string = JSON.stringify(data)
+    const data_JSON = JSON.parse(data_string)
+    const new_formatted = await formatJSON(data_JSON)
+    res.status(200).send(new_formatted)
+  })
+  .catch(err => {
+    res.status(500).send({ message: "An error occured while fetching review by user."});
+  })
+}
